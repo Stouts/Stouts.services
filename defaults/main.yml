@@ -1,0 +1,17 @@
+services_enabled: yes                       # Enable the role
+services_init: systemd                      # Init system
+services_user: root                         # Default user
+services_reload: yes                        # Reload when configuration changed
+services_systemd_path: /etc/systemd/system  # Where configurations will be placed
+services_upstart_path: /etc/init            # Where configurations will be placed
+services_chdir: /                           # Default working directory
+
+# Define your services here
+# Example:
+# services_services:
+#   first:
+#     exec: echo 1
+#   another:
+#     exec: uwsgi myapp
+#     chdir: /myapp
+services_services: {}                       

@@ -1,0 +1,26 @@
+---
+
+- include_vars: "{{ansible_distribution}}.yml"
+
+- name: Setup SystemD services
+  template: src=systemd.conf.j2 dest={{services_systemd_path}}/{{item.key}}.service
+  with_dict: services_services
+  register: services_changed
+  when: services_init == 'systemd'
+  notify: services restart
+
+- name: Setup Upstart services
+  template: src=upstart.conf.j2 dest={{services_upstart_path}}/{{item.key}}.conf
+  with_dict: services_services
+  register: services_changed
+  when: services_init == 'upstart'
+  notify: services restart
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+  when: services_changed.changed and services_init == 'systemd' and services_reload
+
+- name: Enable services
+  service: name={{item.item.key}} state=started enabled={{item.item.value.enabled|default(False)}}
+  when: item.changed
+  with_items: services_changed.results
