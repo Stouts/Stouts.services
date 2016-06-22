@@ -3,4 +3,4 @@
 - name: services restart
   service: name={{item.item.key}} state=restarted
   when: item.changed
-  with_items: services_changed.results
+  with_items: "{{services_changed.results}}"
